@@ -16,7 +16,6 @@ from sklearn.svm import SVR
 
 from sklearn.ensemble import RandomForestRegressor
 
-
 import sys
 
 from csv import reader
