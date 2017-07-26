@@ -267,10 +267,35 @@ def RFR(x_train,y_train,x_validation,y_validation,depth,x_for_est):
     print('Variance score: %.2f' % regr_rf.score(x_validation, y_validation))
     return pred_out, pred_out_est
 
+def final_csv(x_est,predict_1,predict_2,predict_3,is1D):
+
+    if is1D:
+
+        data_est = pandas.DataFrame(data=x_est,columns=['total_distance'])
+        data_LR = pandas.DataFrame(data=predict_1,columns=['total_minutes_LR'])
+        data_DTR = pandas.DataFrame(data=predict_2,columns=['total_minutes_DTR'])
+        data_RFR = pandas.DataFrame(data=predict_3,columns=['total_minutes_RFR'])
+
+        frames = [data_est,data_LR,data_DTR,data_RFR]
+        dataset_final  = pandas.concat(frames, axis=1)
+        #print dataset_final
+        dataset_final.to_csv('time_estimation_final_1D.csv')
+
+    else:
+        data_est = pandas.DataFrame(data=x_est,columns=['dow','promised_time','actual_time','on_demand','rating_driver','rating_picker','accepted_rate_driver','accepted_rate_picker','picking_speed_driver','picking_speed_picker','found_rate_driver', 'found_rate_picker','seniority_driver','seniority_picker','total_distance'])
+        data_LR = pandas.DataFrame(data=predict_1,columns=['total_minutes_LR'])
+        data_DTR = pandas.DataFrame(data=predict_2,columns=['total_minutes_DTR'])
+        data_RFR = pandas.DataFrame(data=predict_3,columns=['total_minutes_RFR'])
+
+        frames = [data_est,data_LR,data_DTR,data_RFR]
+        dataset_final  = pandas.concat(frames, axis=1)
+        #print dataset_final
+        dataset_final.to_csv('time_estimation_final.csv')
+
     
 if __name__ == "__main__":
     # Set this variable for 1D ML algorithm True or False
-    is_1D = False
+    is_1D = True
 
     
     # Loading datasets
@@ -376,6 +401,8 @@ if __name__ == "__main__":
     
         pred_out, pred_out_est = RFR(X_train,Y_train,X_validation,Y_validation, 2,X_est)
         plot_1D(X_train,Y_train,X_validation,Y_validation,pred_out,X_est,pred_out_est, 'Random Forest Regressor')
+        
+        final_csv(X_est,predict_out_est,pred_outcome_est,pred_out_est,is_1D)
 
        
     else:
@@ -447,6 +474,11 @@ if __name__ == "__main__":
         # Random Forest Regressor 
     
         pred_out, pred_out_est = RFR(X_train,Y_train,X_validation,Y_validation, 100,X_est)
+        print dataset_est
+
+        final_csv(X_est,predict_out_est,pred_outcome_est,pred_out_est,is_1D)
+        
+
 
 
 
